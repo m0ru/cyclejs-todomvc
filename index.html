@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CycleJs with JSPM Test</title>
+</head>
+<body>
+    <div id="helloCycleContainer">Loading App...</div>
+
+    <hr>
+
+    <div id="interval-demo-mount"></div>
+
+    <button id='masterbutton'>Click me!</button>
+
+    <br>
+
+<!--
+    <input type="text" id="todo-text" class=""></input>
+    <button id="todo-button" class="action-button">Add</button>
+    <ul id="todo-list"></ul>
+-->
+
+    <script src="jspm_packages/system.js"></script>
+    <script src="jspm.config.js"></script>
+    <script>
+        //System.import('app/jsx_test.jsx!') // requires React
+        System.import('app/app')
+                .catch(console.error.bind(console));
+    </script>
+</body>
+</html>
