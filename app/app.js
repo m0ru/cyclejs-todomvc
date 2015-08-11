@@ -1,36 +1,29 @@
-
+/** @jsx hJSX */
 import Cycle from '@cycle/core';
 //import CycleDOM from '@cycle/dom';
 import CycleDOM from '@cycle/dom';
-let {h} = CycleDOM;
+let {makeDOMDriver, hJSX} = CycleDOM;
 
-console.log('app_cycle.js loaded.');
+console.log('app.js loaded.');
 
 function todos2Lis(todos) {
-    return todos.map(todo => h('li', todo) )
+    return todos.map(todo =>
+        <li>{ todo } <a href='#'>x</a></li>
+    )
 }
 
 function view(state$) {
-    return state$.map(({name, todos}) =>
-        h('div', [
-            h('form#add-todo-form', [
-                h('input#todo-text', {
-                    attributes: {
-                        type: 'text',
-                        name: 'todotext'
-                    }
-                }),
-                h('button#todo-button.action-button', 'Add')
-            ]),
-            h('ul#todo-list', todos2Lis(todos)),
-            h('br'),
-//            h('button#todo-button.action-button', 'Add'),
-            h('label', 'Name:'),
-            h('input.myinput', {
-                attributes: {type: 'text'}
-            }),
-            h('p', 'Hello ' + name)
-        ])
+    return state$.map( ({name, todos}) =>
+        <div>
+            <form action="" id="add-todo-form">
+                <input type="text" id="todo-text" name="todotext"></input>
+                <button id="todo-button" class="action-button">Add</button>
+            </form>
+
+            <ul id="todo-list">
+                { todos2Lis(todos) }
+            </ul>
+        </div>
     );
 }
 
