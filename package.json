@@ -17,7 +17,6 @@
     "dependencies": {
       "@cycle/core": "npm:@cycle/core@^2.0.1",
       "@cycle/dom": "npm:@cycle/dom@^4.0.1",
-      "jsx": "github:floatdrop/plugin-jsx@^1.1.0",
       "rx": "npm:rx@^3.0.0"
     },
     "devDependencies": {
