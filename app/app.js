@@ -8,12 +8,12 @@ console.log('app.js loaded.');
 
 function todos2Lis(todos) {
     return todos.map(todo =>
-        <li>{ todo } <a href='#'>x</a></li>
+        <li>{ todo } <a className="remove-button" href="#">x</a></li>
     )
 }
 
 function view(state$) {
-    return state$.map( ({name, todos}) =>
+    return state$.map( ({todos}) =>
         <div>
             <form action="" id="add-todo-form">
                 <input type="text" id="todo-text" name="todotext"></input>
@@ -82,13 +82,19 @@ function addTodo3(DOM) {
     return submit$.withLatestFrom(text$, (s, t) => t)
 }
 
+function removeTodo(DOM) {
+  let rm$ = DOM.get('.remove-button', 'click');
+  rm$.subscribe(a => console.log('rm ', a)); // TODO testing; deletme
+  return rm$;
+}
+
 function intent(DOM) {
     window.DOM = DOM;
     return {
-        changeName: DOM.get('.myinput', 'input').map(ev => ev.target.value),
         addTodo: addTodo(DOM),
         addTodo2: addTodo2(DOM),
-        addTodo3: addTodo3(DOM)
+        addTodo3: addTodo3(DOM),
+        removeTodo: removeTodo(DOM)
     }
 
 }
@@ -103,9 +109,8 @@ function model(actions) {
     todos$.subscribe(a => console.log('actions.addTodo: ', a));
 
     return Cycle.Rx.Observable.combineLatest(
-        actions.changeName.startWith(''),
         todos$,
-        (name, todos) => ({name, todos})
+        (todos) => ({todos})
     )
 }
 
