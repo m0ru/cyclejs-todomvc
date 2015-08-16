@@ -8,16 +8,9 @@ let {makeDOMDriver, hJSX} = CycleDOM;
 console.log('app.js loaded.');
 
 function todos2Lis(todos) {
-    //return []
-    window.todos = todos;
-
-    //console.log('values: ', todos.values())
-
-    //return [];
-    //return todos.entriesSeq().map(todo =>
-    return todos.valueSeq().map(todo =>
+    return todos.toArray().map(todo =>
             <li>{ todo.text } <a className="remove-button" href="#">x</a></li>
-        )
+        );
 }
 
 function view(state$) {
