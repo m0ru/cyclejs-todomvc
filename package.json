@@ -17,6 +17,7 @@
     "dependencies": {
       "@cycle/core": "npm:@cycle/core@^2.0.1",
       "@cycle/dom": "npm:@cycle/dom@^4.0.1",
+      "immutable": "npm:immutable@^3.7.4",
       "rx": "npm:rx@^3.0.0"
     },
     "devDependencies": {

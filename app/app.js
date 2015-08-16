@@ -2,14 +2,22 @@
 import Cycle from '@cycle/core';
 //import CycleDOM from '@cycle/dom';
 import CycleDOM from '@cycle/dom';
+import Immutable from 'immutable';
 let {makeDOMDriver, hJSX} = CycleDOM;
 
 console.log('app.js loaded.');
 
 function todos2Lis(todos) {
-    return todos.map(todo =>
-        <li>{ todo } <a className="remove-button" href="#">x</a></li>
-    )
+    //return []
+    window.todos = todos;
+
+    //console.log('values: ', todos.values())
+
+    //return [];
+    //return todos.entriesSeq().map(todo =>
+    return todos.valueSeq().map(todo =>
+            <li>{ todo.text } <a className="remove-button" href="#">x</a></li>
+        )
 }
 
 function view(state$) {
@@ -27,6 +35,7 @@ function view(state$) {
     );
 }
 
+
 function addTodo(DOM) {
     let formSubmit$ = DOM.get('#add-todo-form', 'submit')
         .map(e => {
@@ -39,7 +48,7 @@ function addTodo(DOM) {
     // the intent isn't used elsewhere
     formSubmit$.subscribe(x => void(0));
 
-    return formSubmit$;
+    return formSubmit$.map(enrichCreation);
 }
 
 /**
@@ -57,11 +66,13 @@ function addTodo2(DOM) {
             //add-button clicked
             .merge(DOM.get('#todo-button', 'click'));
 
-    return text$.join(submit$,
-        () => text$, //window = as long as text$ is open
-        () => Cycle.Rx.Observable.timer(0),
-        (t, s) => 'join:' + t
-    )
+    return text$
+        .join(submit$,
+            () => text$, //window = as long as text$ is open
+            () => Cycle.Rx.Observable.timer(0),
+            (t, s) => 'join:' + t
+        )
+        .map(enrichCreation);
 }
 
 /**
@@ -79,9 +90,17 @@ function addTodo3(DOM) {
             //add-button clicked
             .merge(DOM.get('#todo-button', 'click'));
 
-    return submit$.withLatestFrom(text$, (s, t) => t)
+    return submit$
+        .withLatestFrom(text$, (s, t) => t)
+        .map(enrichCreation);
 }
 
+function enrichCreation(text) {
+    return {
+        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+        text
+    }
+}
 function removeTodo(DOM) {
   let rm$ = DOM.get('.remove-button', 'click');
   rm$.subscribe(a => console.log('rm ', a)); // TODO testing; deletme
@@ -103,8 +122,8 @@ function model(actions) {
     window.actions = actions; // for debugging
 
     var todos$ = actions.addTodo3
-        .startWith([])
-        .scan((items, item) => items.concat(item));
+        .startWith(Immutable.Map())
+        .scan((items, item) => items.set(item.id, item));
 
     todos$.subscribe(a => console.log('actions.addTodo: ', a));
 

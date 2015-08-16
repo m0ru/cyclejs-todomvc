@@ -3,7 +3,7 @@ System.config({
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {
-    "blacklist": [], // to enable jsx
+    "blacklist": [],
     "optional": [
       "runtime",
       "optimisation.modules.system"
@@ -20,6 +20,7 @@ System.config({
     "babel": "npm:babel-core@5.8.21",
     "babel-runtime": "npm:babel-runtime@5.8.20",
     "core-js": "npm:core-js@1.0.1",
+    "immutable": "npm:immutable@3.7.4",
     "rx": "npm:rx@3.0.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
