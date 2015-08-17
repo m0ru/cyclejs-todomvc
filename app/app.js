@@ -9,10 +9,14 @@ let {makeDOMDriver, hJSX} = CycleDOM;
 console.log('app.js loaded.');
 
 function todos2Lis(todos) {
-    return todos.toArray().map(todo =>
-        <li>
-            <todo-item value={ todo.text } id={ todo.id }/>
+    return todos.toArray().map(todo => {
+        console.log('rendering todo: ', todo.id);
+        return <li> attributes={{'data-id': todo.id}}
+            <todo-item
+                value={ todo.text }
+                todo-id = { todo.id }/>
         </li>
+    }
     );
 }
 
@@ -90,9 +94,12 @@ function addTodo3(DOM) {
 }
 
 function removeTodo(DOM) {
-  let rm$ = DOM.get('.cycleCustomElement-TODO-ITEM', 'delete');
-  rm$.subscribe(a => console.log('rm ', a.target.id)); // TODO testing; deletme
-  return rm$.map(e => e.target.id);
+  return DOM
+    .get('.cycleCustomElement-TODO-ITEM', 'delete')
+    .map(id => {
+        console.log('removing ', id);
+        return Number.parseInt(id);
+    });
 }
 
 function intent(DOM) {
@@ -109,15 +116,32 @@ function intent(DOM) {
 function model(actions) {
     window.actions = actions; // for debugging
 
-    var todos$ = actions.addTodo3
+    let addMod$ = actions.addTodo3
         .map(text => ({
             id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
             text
         }))
-        .startWith(Immutable.Map())
-        .scan((items, item) => items.set(item.id, item));
+        .map(todo => todos => todos.set(todo.id, todo));
 
-    todos$.subscribe(a => console.log('actions.addTodo: ', a));
+    let removalMod$ = actions.removeTodo
+        .map(id => todos => {
+            window.someId = id;
+            window.todosBefore = todos;
+            let ret = todos.remove(id)
+            window.todosAfter = ret;
+            return ret;
+        });
+
+    let todos$ = Cycle.Rx.Observable
+        .merge(addMod$, removalMod$)
+        .startWith(Immutable.Map())
+        .scan((todos, mod) => {
+            //window.todos = todos;
+            console.log('applying mod')
+            let ret = mod(todos)
+            //window.todosAfter = ret;
+            return ret;
+        });
 
     return Cycle.Rx.Observable.combineLatest(
         todos$,
