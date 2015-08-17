@@ -3,14 +3,17 @@ import Cycle from '@cycle/core';
 //import CycleDOM from '@cycle/dom';
 import CycleDOM from '@cycle/dom';
 import Immutable from 'immutable';
+import todoItem from './todo-item';
 let {makeDOMDriver, hJSX} = CycleDOM;
 
 console.log('app.js loaded.');
 
 function todos2Lis(todos) {
     return todos.toArray().map(todo =>
-            <li>{ todo.text } <a className="remove-button" href="#">x</a></li>
-        );
+        <li>
+            <todo-item value={ todo.text } id={ todo.id }/>
+        </li>
+    );
 }
 
 function view(state$) {
@@ -95,9 +98,9 @@ function enrichCreation(text) {
     }
 }
 function removeTodo(DOM) {
-  let rm$ = DOM.get('.remove-button', 'click');
-  rm$.subscribe(a => console.log('rm ', a)); // TODO testing; deletme
-  return rm$;
+  let rm$ = DOM.get('.cycleCustomElement-TODO-ITEM', 'delete');
+  rm$.subscribe(a => console.log('rm ', a.target.id)); // TODO testing; deletme
+  return rm$.map(e => e.target.id);
 }
 
 function intent(DOM) {
@@ -134,7 +137,9 @@ function cyclejsMain(drivers) {
     };
 }
 let cycleDrivers = {
-    DOM: CycleDOM.makeDOMDriver('#helloCycleContainer')
+    DOM: CycleDOM.makeDOMDriver('#helloCycleContainer', {
+            'todo-item': todoItem
+    })
 }
 
 Cycle.run(cyclejsMain, cycleDrivers);

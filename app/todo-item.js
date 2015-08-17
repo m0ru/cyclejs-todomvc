@@ -1,0 +1,5 @@
+
+/** @jsx hJSX */
+import Cycle from '@cycle/core';
+import CycleDOM from '@cycle/dom';
+let {makeDOMDriver, hJSX} = CycleDOM;export default function todoItem(responses) {  // Use responses.DOM to get DOM events  // happening on the elements from this  // custom element.  //  // Use responses.props to get properties  // passed to this custom elements from  // the parent Cycle.js app.  // ...   let text$ = responses.props.get('value');   let vtree$ = text$.map(todoText =>        <div>{ todoText }            <a className="remove-button" href="#">x</a>        </div>   );   let delete$ = responses.DOM.get('.remove-button', 'click').map(e => 'delete-todo-event');    /*    let actions = intent(drivers.DOM);    let state$ = model(actions);    */  return {    DOM: vtree$,    events: {      delete: delete$    }  };}
