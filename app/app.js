@@ -44,7 +44,7 @@ function addTodo(DOM) {
     // the intent isn't used elsewhere
     formSubmit$.subscribe(x => void(0));
 
-    return formSubmit$.map(enrichCreation);
+    return formSubmit$;
 }
 
 /**
@@ -67,8 +67,7 @@ function addTodo2(DOM) {
             () => text$, //window = as long as text$ is open
             () => Cycle.Rx.Observable.timer(0),
             (t, s) => 'join:' + t
-        )
-        .map(enrichCreation);
+        );
 }
 
 /**
@@ -87,16 +86,9 @@ function addTodo3(DOM) {
             .merge(DOM.get('#todo-button', 'click'));
 
     return submit$
-        .withLatestFrom(text$, (s, t) => t)
-        .map(enrichCreation);
+        .withLatestFrom(text$, (s, t) => t);
 }
 
-function enrichCreation(text) {
-    return {
-        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
-        text
-    }
-}
 function removeTodo(DOM) {
   let rm$ = DOM.get('.cycleCustomElement-TODO-ITEM', 'delete');
   rm$.subscribe(a => console.log('rm ', a.target.id)); // TODO testing; deletme
@@ -118,6 +110,10 @@ function model(actions) {
     window.actions = actions; // for debugging
 
     var todos$ = actions.addTodo3
+        .map(text => ({
+            id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+            text
+        }))
         .startWith(Immutable.Map())
         .scan((items, item) => items.set(item.id, item));
 
