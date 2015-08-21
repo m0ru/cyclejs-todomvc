@@ -9,24 +9,23 @@ let {makeDOMDriver, hJSX} = CycleDOM;
 console.log('app.js loaded.');
 
 function todos2Lis(todos) {
-    return todos.toArray().map(todo => {
-        console.log('rendering todo: ', todo.id);
-        return <li> attributes={{'data-id': todo.id}}
+    return todos.toArray().map(todo =>
+        <li attributes={{'data-id': todo.id}}>
             <todo-item
                 value={ todo.text }
                 todo-id = { todo.id }/>
         </li>
-    }
     );
 }
 
+//s/div action/form action/
 function view(state$) {
     return state$.map( ({todos}) =>
         <div>
-            <form action="" id="add-todo-form">
+            <div action="" id="add-todo-form">
                 <input type="text" id="todo-text" name="todotext"></input>
                 <button id="todo-button" class="action-button">Add</button>
-            </form>
+            </div>
 
             <ul id="todo-list">
                 { todos2Lis(todos) }
@@ -39,14 +38,9 @@ function view(state$) {
 function addTodo(DOM) {
     let formSubmit$ = DOM.get('#add-todo-form', 'submit')
         .map(e => {
-            //supress page-reload on form submission
-            e.preventDefault();
             return e.target
                 .querySelector('#todo-text').value
         });
-    // make sure `preventDefault` gets called even if
-    // the intent isn't used elsewhere
-    formSubmit$.subscribe(x => void(0));
 
     return formSubmit$;
 }
@@ -97,13 +91,20 @@ function removeTodo(DOM) {
   return DOM
     .get('.cycleCustomElement-TODO-ITEM', 'delete')
     .map(id => {
-        console.log('removing ', id);
-        return Number.parseInt(id);
+        console.log('removing ', id.detail);
+        return Number.parseInt(id.detail);
     });
 }
 
 function intent(DOM) {
     window.DOM = DOM;
+
+    // supress page reload on form-submit
+    DOM.get('#add-todo-form', 'submit').subscribe(e => {
+        console.log('supressing reload ', e);
+        e.preventDefault();
+    });
+
     return {
         addTodo: addTodo(DOM),
         addTodo2: addTodo2(DOM),
