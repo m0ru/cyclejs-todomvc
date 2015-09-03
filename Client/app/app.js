@@ -6,6 +6,15 @@ import Immutable from 'immutable';
 import todoItem from './todo-item';
 let {makeDOMDriver, hJSX} = CycleDOM;
 
+
+//TODO debug; deleteme
+window.Cycle = Cycle;
+window.CycleDOM = CycleDOM;
+/* TODO STOPPED HERE:
+*  get this plugin to work: https://www.npmjs.com/package/rx-dom
+* and use this function: https://xgrommx.github.io/rx-book/content/rxjs_bindings/dom/web_sockets/from_web_socket.html
+*/
+
 console.log('app.js loaded.');
 
 function todos2Lis(todos) {

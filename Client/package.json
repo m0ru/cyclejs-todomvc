@@ -20,6 +20,7 @@
       "@cycle/dom": "npm:@cycle/dom@^4.0.1",
       "immutable": "npm:immutable@^3.7.4",
       "rx": "npm:rx@^3.0.0",
+      "rx-dom": "npm:rx-dom@^6.0.0",
       "ws": "npm:ws@^0.8.0"
     },
     "devDependencies": {

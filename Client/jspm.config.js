@@ -21,7 +21,8 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.20",
     "core-js": "npm:core-js@1.0.1",
     "immutable": "npm:immutable@3.7.4",
-    "rx": "npm:rx@3.0.0",
+    "rx": "npm:rx@3.1.2",
+    "rx-dom": "npm:rx-dom@6.0.0",
     "ws": "npm:ws@0.8.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
@@ -348,10 +349,14 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
+    "npm:rx-dom@6.0.0": {
+      "process": "github:jspm/nodelibs-process@0.1.1",
+      "rx": "npm:rx@3.1.2"
+    },
     "npm:rx@2.5.3": {
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
-    "npm:rx@3.0.0": {
+    "npm:rx@3.1.2": {
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:sentence-case@1.1.2": {
