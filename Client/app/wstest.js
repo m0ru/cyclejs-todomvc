@@ -4,7 +4,14 @@ import {Rx} from '@cycle/core';
 
 //var ws = new WebSocket('ws://localhost:8080');
 
-export function webSocketStreams(url) {
+let send$ = Rx.Observable.create(observer => {
+    window.wsSend = observer.onNext.bind(observer);
+});
+
+window.wsReceive$ = webSocketStreams('ws://localhost:8080')(send$);
+window.wsReceive$.subscribe(x => console.log('wsReceive$: ', x.data));
+
+export default function webSocketStreams(url) {
     return (send$) => {
         let ws = new WebSocket(url);
 
