@@ -1,17 +1,50 @@
 import WebSocket from 'ws';
+import {Rx} from '@cycle/core';
+
 
 var ws = new WebSocket('ws://localhost:8080');
-//var ws = new WebSocket('ws://echo.websocket.org');
 
-console.log(ws);
+export function webSocketStreams(url, send$) {
+    let ws = new WebSocket(url);
+    return new Promise((resolve, reject) => {
+        ws.onopen = () => {
+            console.log('websocket open');
+            receive$ = _fromWebsocket(ws, send$)
 
-ws.onopen = function open() {
-    console.log('sending')
-    ws.send('something');
-};
+            //TODO for debugging, deletme
+            window.ws = ws;
+            window.receive$ = receive$;
 
-ws.onmessage = function(data, flags) {
-  // flags.binary will be set if a binary data is received.
-  // flags.masked will be set if the data was masked.
-  console.log('received message:', data.data);
-};
+            resolve(receive$);
+        }
+        ws.onerror = (args) => {
+            console.error('websocket closed: ', args);
+            reject("Couldn't open web-socket to " + url);
+        }
+    })
+}
+/**
+ * NOTE: can only be called once on each web-socket as
+ * it attaches callback-function to predermined properties.
+ */
+function _fromWebsocket(ws) {
+    let receive$ = Rx.Observable
+        .create(observer => {
+            ws.onmessage = (msg, flags) => {
+                console.log('received - msg: ', msg);
+                console.log('received - flags: ', flags);
+                observer.onNext(msg);
+            }
+            ws.onerror = (args) => {
+                console.error('websocket error: ', args);
+                observer.onError(args);
+            }
+            ws.onerror = (args) => {
+                console.error('websocket closed: ', args);
+                observer.onClose(args);
+            }
+        });
+    send$.subscribe(x => ws.send(x));
+
+    return receive$;
+}

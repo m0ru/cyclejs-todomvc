@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import todoItem from './todo-item';
 let {makeDOMDriver, hJSX} = CycleDOM;
 
+import './wstest'
 
 //TODO debug; deleteme
 window.Cycle = Cycle;
