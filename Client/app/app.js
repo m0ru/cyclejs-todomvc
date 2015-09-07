@@ -7,7 +7,7 @@ import intent from './intent';
 import model from './model';
 import view from './view';
 
-//import makeWsDriver from './wstest';
+import makeWsDriver from './make-ws-driver';
 
 //TODO debug; deleteme
 window.Cycle = Cycle;
@@ -18,18 +18,34 @@ window.Cycle = Cycle;
 
 console.log('app.js loaded.');
 
-function cyclejsMain(drivers) {
-    window.dDOM = drivers.DOM;
-    let actions = intent(drivers.DOM);
-    let state$ = model(actions);
-    return {
-        DOM: view(state$)
-    };
-}
 let cycleDrivers = {
     DOM: makeDOMDriver('#helloCycleContainer', {
             'todo-item': todoItem
-    })
+    }),
+    ws: makeWsDriver('ws://localhost:8080')
+}
+
+function cyclejsMain(drivers) {
+    window.DOM = drivers.DOM;
+    window.ws = drivers.ws;
+
+    //window.wsReceive$ = makeWsDriver('ws://localhost:8080')(send$);
+    let wsIncoming$ = drivers.ws;
+
+    let wsOutgoing$ = Cycle.Rx.Observable.create(observer => {
+        window.wsSend = observer.onNext.bind(observer);
+    });
+    window.wsIncoming$ = wsIncoming$;
+    window.wsOutgoing$ = wsOutgoing$;
+    wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x.data));
+
+
+    let actions = intent(drivers.DOM);
+    let state$ = model(actions);
+    return {
+        DOM: view(state$),
+        ws: wsOutgoing$
+    };
 }
 
 Cycle.run(cyclejsMain, cycleDrivers);

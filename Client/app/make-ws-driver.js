@@ -1,16 +1,6 @@
 import WebSocket from 'ws';
 import {Rx} from '@cycle/core';
 
-
-//var ws = new WebSocket('ws://localhost:8080');
-
-let send$ = Rx.Observable.create(observer => {
-    window.wsSend = observer.onNext.bind(observer);
-});
-
-window.wsReceive$ = makeWsDriver('ws://localhost:8080')(send$);
-window.wsReceive$.subscribe(x => console.log('wsReceive$: ', x.data));
-
 export default function makeWsDriver(url) {
     return (send$) => {
         let ws = new WebSocket(url);
