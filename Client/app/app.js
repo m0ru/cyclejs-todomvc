@@ -42,7 +42,19 @@ function cyclejsMain(drivers) {
 
 
     let actions = intent(drivers.DOM);
+    mergedActions = mergeActions(actions);
+
+
+
+    mergedActions.subscribe(args => console.log('actions: ', args));
+    splitActions = splitActions(Object.keys(actions), mergedActions);
+
+    splitActions.addTodo.subscribe(args => console.log('split add ', args));
+    splitActions.removeTodo.subscribe(args => console.log('split rm ', args));
+
     window.actions = actions;
+    window.mergedActions = mergedActions;
+
     let state$ = model(actions);
     return {
         DOM: view(state$),
@@ -51,3 +63,37 @@ function cyclejsMain(drivers) {
 }
 
 Cycle.run(cyclejsMain, cycleDrivers);
+
+/*
+* In: { A: A$, B: B$}
+*
+* Out: actions$:
+*    |-----{type: 'A', data: {...}} ----
+*       ------ {type: 'B', data: {...}} ---->
+*/
+function mergeActions(actions) {
+    return Cycle.Rx.Observable
+        .fromArray(Object.keys(actions))
+        .flatMap(type => actions[type]
+            .map(data => {
+                return {type, data};
+            })
+        );
+}
+
+/*
+* In: actions$:
+*    |-----{type: 'A', data: {...}} ----
+*       ------ {type: 'B', data: {...}} ---->
+*
+* Out: { A: A$, B: B$}
+*/
+function splitActions(types, actions$) {
+    let actions = {};
+    for (let t of types) {
+        actions[t] = actions$
+            .filter(a => a.type === t)
+            .map(a => a.data)
+    }
+    return actions;
+}
