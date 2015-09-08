@@ -31,7 +31,6 @@ function cyclejsMain(drivers) {
     window.DOM = drivers.DOM;
     window.ws = drivers.ws;
 
-    //window.wsReceive$ = makeWsDriver('ws://localhost:8080')(send$);
     let wsIncoming$ = drivers.ws;
 
     let wsOutgoing$ = Cycle.Rx.Observable.create(observer => {
