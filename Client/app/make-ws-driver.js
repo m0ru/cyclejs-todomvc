@@ -11,21 +11,21 @@ export default function makeWsDriver(url) {
         }
 
         // receiving messages and errors
-        return Rx.Observable.create(observer => {
+        let incoming$ = Rx.Observable.create(observer => {
             ws.onmessage = (msg, flags) => {
-                console.log('received - msg: ', msg);
-                console.log('received - flags: ', flags);
                 observer.onNext(msg);
             }
             ws.onerror = (args) => {
                 console.error('websocket error: ', args);
+                //TODO try reconnecting first
                 observer.onError(args);
             }
-            ws.onerror = (args) => {
+            ws.onclose = (args) => {
                 console.error('websocket closed: ', args);
-                //TODO try reconnecting first
-                observer.onClose(args);
+                observer.onCompleted(); //TODO not a function
             }
         });
+        incoming$.subscribe(x => console.log('incoming: ', x));
+        return incoming$;
     }
 }
