@@ -4,16 +4,6 @@ import CycleDOM from '@cycle/dom';
 let {makeDOMDriver, hJSX} = CycleDOM;
 
 export default function submitField(responses) {
-  // Use responses.DOM to get DOM events
-  // happening on the elements from this
-  // custom element.
-  //
-  // Use responses.props to get properties
-  // passed to this custom elements from
-  // the parent Cycle.js app.
-  // ...
-   //let text$ = responses.props.get('value');
-   //let id$ = responses.props.get('todo-id');
     let keypress$ = responses.DOM.get('.new-todo', 'keyup');
     let text$ = responses.DOM
             .get('.new-todo', 'change')
