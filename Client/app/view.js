@@ -43,7 +43,7 @@ export default function view(state$) {
         	<section style="display: block;" className="main">
         		<input className="toggle-all" type="checkbox"></input>
         		<label htmlFor="toggle-all">Mark all as complete</label>
-                <ul id="todo-list">
+                <ul id="todo-list" className="todo-list">
                     { todos2Lis(todos) }
                 </ul>
         	</section>
