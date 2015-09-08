@@ -7,8 +7,10 @@ let wsCount = 0;
 let sockets = new Map();
 wss.on('connection', function(thisWs) {
     thisWs.uid = wsCount;
-    sockets[thisWs.uid] = thisWs;
+    sockets.set(thisWs.uid, thisWs);
     wsCount++; //TODO quick and dirty. not suited for production use
+    thisWs.send('hello! you have opened a websocket-connection to this server.');
+
 
     thisWs.on('message', function(message) {
         console.log('received: %s', message);
