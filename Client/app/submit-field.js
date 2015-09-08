@@ -14,28 +14,28 @@ export default function submitField(responses) {
   // ...
    //let text$ = responses.props.get('value');
    //let id$ = responses.props.get('todo-id');
-    let keypress$ = responses.DOM.get('.new-todo', 'keypress');
-
+    let keypress$ = responses.DOM.get('.new-todo', 'keyup');
+    let text$ = responses.DOM
+            .get('.new-todo', 'change')
+            .map(e => e.target.value);
     let submit$ = keypress$.filter(e => {
                 //was `enter` pressed?
                 let key =  e.keypress? e.keypress : e.which;
                 return key === 13;
             });
-    let submitText$ = submit$.map(e => {
-        let ret = e.target.value;
-        // clear out input field
-        e.target.value = ""; //a bit ugly but simple
-        return ret;
-    });
+    let submitText$ = submit$.withLatestFrom(text$, (s, t) => t);
 
-    submitText$.subscribe(x => console.log('submitting ', x));
-
-    let vtree$ = Cycle.Rx.Observable.just(
-		<input className="new-todo"
-            id="todo-text" name="todotext"
-            placeholder="What needs to be done?"
-            autofocus=""></input>
-    );
+    let vtree$ = submit$
+        .map(x => '')
+        .startWith('')
+        .merge(text$)
+        .map(t =>
+    		<input className="new-todo"
+                id="todo-text" name="todotext"
+                placeholder="What needs to be done?"
+                value={ t }
+                autofocus=""></input>
+        )
 
     return {
       DOM: vtree$,
