@@ -1,7 +1,6 @@
 import Immutable from 'immutable';
 
 export default function model(actions) {
-    window.actions = actions; // for debugging
 
     let addMod$ = actions.addTodo
         .map(text => ({
@@ -11,21 +10,14 @@ export default function model(actions) {
         .map(todo => todos => todos.set(todo.id, todo));
 
     let removalMod$ = actions.removeTodo
-        .map(id => todos => {
-            window.someId = id;
-            window.todosBefore = todos;
-            let ret = todos.remove(id)
-            window.todosAfter = ret;
-            return ret;
-        });
+        .map(id => todos => todos.remove(id));
 
     let todos$ = Cycle.Rx.Observable
         .merge(addMod$, removalMod$)
         .startWith(Immutable.Map())
         .scan((todos, mod) => {
-            console.log('modifying state')
-            let ret = mod(todos)
-            return ret;
+            console.log('modifying state');
+            return mod(todos);
         });
 
     return Cycle.Rx.Observable.combineLatest(

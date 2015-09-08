@@ -7,11 +7,13 @@ export default function makeWsDriver(url) {
 
         // enable sending after the socket opens
         ws.onopen = function() {
-            send$.subscribe(x => ws.send(JSON.stringify(x)));
+            send$.subscribe(x =>
+                ws.send(JSON.stringify(x))
+            );
         }
 
         // receiving messages and errors
-        let incoming$ = Rx.Observable.create(observer => {
+        return Rx.Observable.create(observer => {
             ws.onmessage = (msg, flags) => {
                 observer.onNext(JSON.parse(msg.data));
             }
@@ -25,7 +27,5 @@ export default function makeWsDriver(url) {
                 observer.onCompleted(); //TODO not a function
             }
         });
-        incoming$.subscribe(x => console.log('incoming: ', x));
-        return incoming$;
     }
 }
