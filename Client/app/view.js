@@ -14,16 +14,6 @@ function todos2Lis(todos) {
     );
 }
 
-/*
-            <li data-id="1441717656895" className="">
-                <div className="view">
-                    <input className="toggle" type="checkbox">
-                    <label>asdf</label>
-                    <button className="destroy"></button>
-                </div>
-            </li>
-            */
-
 //s/div action/form action/
 export default function view(state$) {
      // button hidden atm for compliance with the official todomvc
@@ -49,7 +39,8 @@ export default function view(state$) {
         	</section>
 
         	<footer style="display: block;" className="footer">
-        		<span className="todo-count"><strong>3</strong> items left</span>
+        		<span className="todo-count"><strong>{ todos.size }</strong> items left</span>
+                {/*}
         		<ul className="filters">
         			<li>
         				<a href="#/" className="selected">All</a>
@@ -61,6 +52,7 @@ export default function view(state$) {
         				<a href="#/completed">Completed</a>
         			</li>
         		</ul>
+                {*/}
         		<button style="display: none;" className="clear-completed"></button>
         	</footer>
         </section>

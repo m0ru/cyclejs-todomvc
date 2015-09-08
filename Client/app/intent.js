@@ -12,16 +12,7 @@ function addTodo(DOM) {
  * to sample from the text-field
  */
 function addTodo2(DOM) {
-    let keypress$ = DOM.get('#todo-text', 'keypress');
-
-    let text$ = keypress$.map(e => e.target.value)
-    let submit$ = keypress$.filter(e => {
-                let key =  e.keypress? e.keypress : e.which;
-                return key === 13;
-            }) //`enter` pressed
-            //add-button clicked
-            .merge(DOM.get('#todo-button', 'click'));
-
+    let {text$, submit$} = submitAndTextStreams(DOM);
     return text$
         .join(submit$,
             () => text$, //window = as long as text$ is open
@@ -29,12 +20,16 @@ function addTodo2(DOM) {
             (t, s) => 'join:' + t
         );
 }
-
 /**
  * Alternative implementation of the intent, using
  * `withLatestFrom` to sample from the text-field
  */
 function addTodo3(DOM) {
+    let {text$, submit$} = submitAndTextStreams(DOM);
+    return submit$
+        .withLatestFrom(text$, (s, t) => t);
+}
+function submitAndTextStreams(DOM) {
     let keypress$ = DOM.get('#todo-text', 'keypress');
 
     let text$ = keypress$.map(e => e.target.value)
@@ -44,9 +39,8 @@ function addTodo3(DOM) {
             }) //`enter` pressed
             //add-button clicked
             .merge(DOM.get('#todo-button', 'click'));
+    return {text$, submit$}
 
-    return submit$
-        .withLatestFrom(text$, (s, t) => t);
 }
 
 function removeTodo(DOM) {
