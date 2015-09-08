@@ -4,7 +4,8 @@ import {hJSX} from '@cycle/dom';
 import todoItem from './todo-item';
 
 function todos2Lis(todos) {
-    return todos.toArray().map(todo =>
+    window.todos = todos;
+    return todos.reverse().toArray().map(todo =>
         <li attributes={{'data-id': todo.id}}>
             <todo-item
                 className="view"
