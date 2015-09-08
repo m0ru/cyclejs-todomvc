@@ -28,11 +28,11 @@ let cycleDrivers = {
 }
 
 function cyclejsMain(drivers) {
-    window.DOM = drivers.DOM;
-    window.ws = drivers.ws;
-
     let wsIncoming$ = drivers.ws;
 
+
+    window.DOM = drivers.DOM;
+    window.ws = drivers.ws;
     let wsOutgoing$ = Cycle.Rx.Observable.create(observer => {
         window.wsSend = observer.onNext.bind(observer);
     });
@@ -42,18 +42,20 @@ function cyclejsMain(drivers) {
 
 
     let actions = intent(drivers.DOM);
-    mergedActions = mergeActions(actions);
+    mergedActions$ = mergeActions(actions);
+
+    wsOutgoing$ = mergedActions$;
 
 
 
-    mergedActions.subscribe(args => console.log('actions: ', args));
-    splitActions = splitActions(Object.keys(actions), mergedActions);
+    mergedActions$.subscribe(args => console.log('actions: ', args));
+    splitActions = splitActions(Object.keys(actions), mergedActions$);
 
     splitActions.addTodo.subscribe(args => console.log('split add ', args));
     splitActions.removeTodo.subscribe(args => console.log('split rm ', args));
 
     window.actions = actions;
-    window.mergedActions = mergedActions;
+    window.mergedActions$ = mergedActions$;
 
     let state$ = model(actions);
     return {
