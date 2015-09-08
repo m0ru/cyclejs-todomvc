@@ -14,11 +14,16 @@ wss.on('connection', function(thisWs) {
 
     thisWs.on('message', function(message) {
         console.log('received: %s', message);
+        let action = JSON.parse(message);
         for(let [uid, ws] of sockets) {
+            //TODO isopen-check / deal with clients dropping
             if(uid === thisWs.uid) {
-                ws.send('echo: ' + message);
+                //TODO for debugging, deletme
+                action.echo = 1;
+                ws.send(JSON.stringify(action));
             } else {
-                ws.send('broadcast: ' + message);
+                action.broadcast = 1;//TODO for debugging, deletme
+                ws.send(JSON.stringify(action));
             }
         }
     });

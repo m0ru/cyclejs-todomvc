@@ -38,7 +38,7 @@ function cyclejsMain(drivers) {
     });
     window.wsIncoming$ = wsIncoming$;
     window.wsOutgoing$ = wsOutgoing$;
-    wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x.data));
+    wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x));
 
 
     let actions = intent(drivers.DOM);

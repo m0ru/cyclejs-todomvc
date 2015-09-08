@@ -7,13 +7,13 @@ export default function makeWsDriver(url) {
 
         // enable sending after the socket opens
         ws.onopen = function() {
-            send$.subscribe(x => ws.send(x));
+            send$.subscribe(x => ws.send(JSON.stringify(x)));
         }
 
         // receiving messages and errors
         let incoming$ = Rx.Observable.create(observer => {
             ws.onmessage = (msg, flags) => {
-                observer.onNext(msg);
+                observer.onNext(JSON.parse(msg.data));
             }
             ws.onerror = (args) => {
                 console.error('websocket error: ', args);
