@@ -12,7 +12,7 @@ function addTodo(DOM) {
  * to sample from the text-field
  */
 function addTodo2(DOM) {
-    let keypress$ = DOM.get('#todo-text', 'change');
+    let keypress$ = DOM.get('#todo-text', 'keypress');
 
     let text$ = keypress$.map(e => e.target.value)
     let submit$ = keypress$.filter(e => {
@@ -35,7 +35,7 @@ function addTodo2(DOM) {
  * `withLatestFrom` to sample from the text-field
  */
 function addTodo3(DOM) {
-    let keypress$ = DOM.get('#todo-text', 'change');
+    let keypress$ = DOM.get('#todo-text', 'keypress');
 
     let text$ = keypress$.map(e => e.target.value)
     let submit$ = keypress$.filter(e => {
@@ -48,6 +48,7 @@ function addTodo3(DOM) {
     return submit$
         .withLatestFrom(text$, (s, t) => t);
 }
+
 function removeTodo(DOM) {
   return DOM
     .get('.cycleCustomElement-TODO-ITEM', 'delete')

@@ -7,24 +7,105 @@ function todos2Lis(todos) {
     return todos.toArray().map(todo =>
         <li attributes={{'data-id': todo.id}}>
             <todo-item
+                className="view"
                 value={ todo.text }
                 todo-id = { todo.id }/>
         </li>
     );
 }
 
+/*
+            <li data-id="1441717656895" className="">
+                <div className="view">
+                    <input className="toggle" type="checkbox">
+                    <label>asdf</label>
+                    <button className="destroy"></button>
+                </div>
+            </li>
+            */
+
 //s/div action/form action/
 export default function view(state$) {
+     // button hidden atm for compliance with the official todomvc
     return state$.map( ({todos}) =>
-        <div>
-            <div action="" id="add-todo-form">
-                <input type="text" id="todo-text" name="todotext"></input>
-                <button id="todo-button" class="action-button">Add</button>
-            </div>
+        <section className="todoapp">
+        	<header className="header">
+        		<h1>todos</h1>
+        		<input className="new-todo"
+                    id="todo-text" name="todotext"
+                    placeholder="What needs to be done?"
+                    autofocus=""></input>
+                <button id="todo-button"
+                    className="action-button"
+                    style="display:none">Add</button>
+        	</header>
 
-            <ul id="todo-list">
-                { todos2Lis(todos) }
-            </ul>
-        </div>
+        	<section style="display: block;" className="main">
+        		<input className="toggle-all" type="checkbox"></input>
+        		<label htmlFor="toggle-all">Mark all as complete</label>
+                <ul id="todo-list">
+                    { todos2Lis(todos) }
+                </ul>
+        	</section>
+
+        	<footer style="display: block;" className="footer">
+        		<span className="todo-count"><strong>3</strong> items left</span>
+        		<ul className="filters">
+        			<li>
+        				<a href="#/" className="selected">All</a>
+        			</li>
+        			<li>
+        				<a href="#/active">Active</a>
+        			</li>
+        			<li>
+        				<a href="#/completed">Completed</a>
+        			</li>
+        		</ul>
+        		<button style="display: none;" className="clear-completed"></button>
+        	</footer>
+        </section>
     );
 }
+
+/*
+<section className="todoapp">
+	<header className="header">
+		<h1>todos</h1>
+		<input className="new-todo" placeholder="What needs to be done?" autofocus="">
+	</header>
+	<section style="display: block;" className="main">
+		<input className="toggle-all" type="checkbox">
+		<label for="toggle-all">Mark all as complete</label>
+		<ul className="todo-list">
+            <li data-id="1441717656895" className="">
+                <div className="view">
+                    <input className="toggle" type="checkbox">
+                    <label>asdf</label>
+                    <button className="destroy"></button>
+                </div>
+            </li>
+            <li data-id="1441717658990" className="">
+                <div className="view">
+                    <input className="toggle" type="checkbox">
+                    <label>foo</label>
+                    <button className="destroy"></button>
+                </div>
+            </li>
+	</section>
+	<footer style="display: block;" className="footer">
+		<span className="todo-count"><strong>3</strong> items left</span>
+		<ul className="filters">
+			<li>
+				<a href="#/" className="selected">All</a>
+			</li>
+			<li>
+				<a href="#/active">Active</a>
+			</li>
+			<li>
+				<a href="#/completed">Completed</a>
+			</li>
+		</ul>
+		<button style="display: none;" className="clear-completed"></button>
+	</footer>
+</section>
+*/

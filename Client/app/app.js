@@ -19,7 +19,7 @@ window.Cycle = Cycle;
 console.log('app.js loaded.');
 
 let cycleDrivers = {
-    DOM: makeDOMDriver('#helloCycleContainer', {
+    DOM: makeDOMDriver('#cycleMountPoint', {
             'todo-item': todoItem
     }),
     ws: makeWsDriver('ws://localhost:8080')
@@ -41,6 +41,7 @@ function cyclejsMain(drivers) {
 
 
     let actions = intent(drivers.DOM);
+    window.actions = actions;
     let state$ = model(actions);
     return {
         DOM: view(state$),
