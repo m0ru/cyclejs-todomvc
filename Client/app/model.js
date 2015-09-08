@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 export default function model(actions) {
     window.actions = actions; // for debugging
 
-    let addMod$ = actions.addTodo3
+    let addMod$ = actions.addTodo
         .map(text => ({
             id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
             text

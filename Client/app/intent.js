@@ -39,6 +39,7 @@ function submitAndTextStreams(DOM) {
             }) //`enter` pressed
             //add-button clicked
             .merge(DOM.get('#todo-button', 'click'));
+    //submit$.subscribe()
     return {text$, submit$}
 
 }
@@ -60,9 +61,10 @@ export default function intent(DOM) {
     });
 
     return {
-        addTodo: addTodo(DOM),
-        addTodo2: addTodo2(DOM),
-        addTodo3: addTodo3(DOM),
+        //addTodo4: addTodo(DOM),
+        //addTodo2: addTodo2(DOM),
+        //addTodo3: addTodo3(DOM),
+        addTodo: DOM.get('submit-field.new-todo', 'submit'),
         removeTodo: removeTodo(DOM)
     }
 

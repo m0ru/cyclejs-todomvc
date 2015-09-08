@@ -21,10 +21,7 @@ export default function view(state$) {
         <section className="todoapp">
         	<header className="header">
         		<h1>todos</h1>
-        		<input className="new-todo"
-                    id="todo-text" name="todotext"
-                    placeholder="What needs to be done?"
-                    autofocus=""></input>
+                <submit-field className="new-todo"></submit-field>
                 <button id="todo-button"
                     className="action-button"
                     style="display:none">Add</button>

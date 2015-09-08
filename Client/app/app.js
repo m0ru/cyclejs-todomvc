@@ -2,6 +2,7 @@
 import Cycle from '@cycle/core';
 import {makeDOMDriver} from '@cycle/dom';
 import todoItem from './todo-item';
+import submitField from './submit-field';
 
 import intent from './intent';
 import model from './model';
@@ -20,7 +21,8 @@ console.log('app.js loaded.');
 
 let cycleDrivers = {
     DOM: makeDOMDriver('#cycleMountPoint', {
-            'todo-item': todoItem
+            'todo-item': todoItem,
+            'submit-field': submitField
     }),
     ws: makeWsDriver('ws://localhost:8080')
 }
