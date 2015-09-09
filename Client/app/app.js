@@ -28,34 +28,40 @@ let cycleDrivers = {
 }
 
 function cyclejsMain(drivers) {
+
+    // stream from server
     let wsIncoming$ = drivers.ws;
 
+    // get own actions
+    let localActions = intent(drivers.DOM);
+    mergedLocalActions$ = mergeActions(localActions);
 
+    // send own actions to server
+    wsOutgoing$ = mergedLocalActions$;
+
+    // now includes the actions received from the server
+    //let allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
+    let allActionsMerged$ = mergedLocalActions$;
+
+    // return to the more convenient format of having separate action-streams
+    let actions = splitActions(Object.keys(localActions), allActionsMerged$);
+
+
+    //TODO debug; deletme
+    window.actions = actions;
     window.DOM = drivers.DOM;
     window.ws = drivers.ws;
-    let wsOutgoing$ = Cycle.Rx.Observable.create(observer => {
-        window.wsSend = observer.onNext.bind(observer);
-    });
     window.wsIncoming$ = wsIncoming$;
     window.wsOutgoing$ = wsOutgoing$;
+
+    mergedLocalActions$.subscribe(x => console.log('mergedLocalActions$: ', x));
     wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x));
-
-
-    let actions = intent(drivers.DOM);
-    mergedActions$ = mergeActions(actions);
-
-    wsOutgoing$ = mergedActions$;
-
-
-
-    mergedActions$.subscribe(args => console.log('actions: ', args));
-    splitActions = splitActions(Object.keys(actions), mergedActions$);
-
-    splitActions.addTodo.subscribe(args => console.log('split add ', args));
-    splitActions.removeTodo.subscribe(args => console.log('split rm ', args));
-
-    window.actions = actions;
-    window.mergedActions$ = mergedActions$;
+    /*
+    //TODO merging causes wsIncoming$ to not return anything
+    mergedLocalActions$
+      .merge(wsIncoming$)
+      .subscribe(x => console.log('merged: ', x));
+      */
 
     let state$ = model(actions);
     return {

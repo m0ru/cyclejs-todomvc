@@ -19,10 +19,12 @@ wss.on('connection', function(thisWs) {
             //TODO isopen-check / deal with clients dropping
             if(uid === thisWs.uid) {
                 //TODO for debugging, deletme
-                action.echo = 1;
+                console.log('echoing to uid ', uid);
+                action.echo = true;//TODO for debugging, deletme
                 ws.send(JSON.stringify(action));
             } else {
-                action.broadcast = 1;//TODO for debugging, deletme
+                console.log('broadcasting to ', uid);
+                action.broadcast = true;//TODO for debugging, deletme
                 ws.send(JSON.stringify(action));
             }
         }

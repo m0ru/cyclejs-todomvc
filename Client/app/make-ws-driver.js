@@ -15,6 +15,7 @@ export default function makeWsDriver(url) {
         // receiving messages and errors
         return Rx.Observable.create(observer => {
             ws.onmessage = (msg, flags) => {
+                window.wsObserver = observer; //TODO debug; deletme
                 observer.onNext(JSON.parse(msg.data));
             }
             ws.onerror = (args) => {
