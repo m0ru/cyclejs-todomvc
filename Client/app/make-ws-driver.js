@@ -16,7 +16,9 @@ export default function makeWsDriver(url) {
         return Rx.Observable.create(observer => {
             ws.onmessage = (msg, flags) => {
                 window.wsObserver = observer; //TODO debug; deletme
-                observer.onNext(JSON.parse(msg.data));
+                const msgData = JSON.parse(new String(msg.data));
+                console.log('websocket onmessage: ', msgData)
+                observer.onNext(msgData);
             }
             ws.onerror = (args) => {
                 console.error('websocket error: ', args);

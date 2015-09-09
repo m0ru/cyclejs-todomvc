@@ -56,12 +56,12 @@ function cyclejsMain(drivers) {
 
     mergedLocalActions$.subscribe(x => console.log('mergedLocalActions$: ', x));
     wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x));
-    /*
-    //TODO merging causes wsIncoming$ to not return anything
-    mergedLocalActions$
-      .merge(wsIncoming$)
-      .subscribe(x => console.log('merged: ', x));
-      */
+    //TODO subscribing twice causes the websocket onNext to only trigger
+    // for the second observable.
+    //
+    allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
+    allActionsMerged$.subscribe(x => console.log('allActionsMerged$1: ', x));
+    allActionsMerged$.subscribe(x => console.log('allActionsMerged$2: ', x));
 
     let state$ = model(actions);
     return {
