@@ -14,21 +14,21 @@ export default function makeWsDriver(url) {
 
         // receiving messages and errors
         return Rx.Observable.create(observer => {
-            ws.onmessage = (msg, flags) => {
+            ws.addEventListener('message', (msg, flags) => {
                 window.wsObserver = observer; //TODO debug; deletme
                 const msgData = JSON.parse(new String(msg.data));
                 console.log('websocket onmessage: ', msgData)
                 observer.onNext(msgData);
-            }
-            ws.onerror = (args) => {
+            });
+            ws.addEventListener('error',  (args) => {
                 console.error('websocket error: ', args);
                 //TODO try reconnecting first
                 observer.onError(args);
-            }
-            ws.onclose = (args) => {
-                console.error('websocket closed: ', args);
+            });
+            ws.addEventListener('close',  (args) => {
+                console.log('websocket closed: ', args);
                 observer.onCompleted(); //TODO not a function
-            }
+            });
         });
     }
 }

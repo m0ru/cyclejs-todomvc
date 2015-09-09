@@ -40,8 +40,8 @@ function cyclejsMain(drivers) {
     wsOutgoing$ = mergedLocalActions$;
 
     // now includes the actions received from the server
-    //let allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
-    let allActionsMerged$ = mergedLocalActions$;
+    let allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
+    //let allActionsMerged$ = mergedLocalActions$;
 
     // return to the more convenient format of having separate action-streams
     let actions = splitActions(Object.keys(localActions), allActionsMerged$);
@@ -54,6 +54,7 @@ function cyclejsMain(drivers) {
     window.wsIncoming$ = wsIncoming$;
     window.wsOutgoing$ = wsOutgoing$;
 
+/*
     mergedLocalActions$.subscribe(x => console.log('mergedLocalActions$: ', x));
     wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x));
     //TODO subscribing twice causes the websocket onNext to only trigger
@@ -62,6 +63,7 @@ function cyclejsMain(drivers) {
     allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
     allActionsMerged$.subscribe(x => console.log('allActionsMerged$1: ', x));
     allActionsMerged$.subscribe(x => console.log('allActionsMerged$2: ', x));
+    */
 
     let state$ = model(actions);
     return {
