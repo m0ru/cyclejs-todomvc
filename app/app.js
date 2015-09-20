@@ -24,7 +24,7 @@ let cycleDrivers = {
             'todo-item': todoItem,
             'submit-field': submitField
     }),
-    ws: makeWsDriver('ws://localhost:8080')
+    ws: makeWsDriver('ws://localhost:8000/todos')
 }
 
 function cyclejsMain(drivers) {

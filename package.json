@@ -5,12 +5,9 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "npm run compile",
-
     "compile": "babel index.js > generated/index.js",
-
     "prestart": "npm run compile",
     "start": "node generated/index.js",
-
     "watch": "watch 'npm run start' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,7 +17,9 @@
     "jspm": "^0.16.0-beta.6"
   },
   "devDependencies": {
-    "babel": "^5.8.23"
+    "babel": "^5.8.23",
+    "express": "^4.13.3",
+    "express-ws": "^0.2.6"
   },
   "jspm": {
     "directories": {},
