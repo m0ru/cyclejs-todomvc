@@ -1,6 +1,0 @@
-# we only need dist/ and package.json to be published
-# ignore everything else
-
-*
-!dist/
-!package.json

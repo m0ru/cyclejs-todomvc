@@ -1,15 +1,26 @@
 {
-  "name": "cyclejs-testsetup",
-  "version": "1.0.0",
+  "name": "cyclejs-todomvc",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prepublish": "npm run compile",
+
+    "compile": "babel index.js > generated/index.js",
+
+    "prestart": "npm run compile",
+    "start": "node generated/index.js",
+
+    "watch": "watch 'npm run start' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "jspm": "^0.16.0-beta.6"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23"
   },
   "jspm": {
     "directories": {},
