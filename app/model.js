@@ -3,10 +3,6 @@ import Immutable from 'immutable';
 export default function model(actions) {
 
     let addMod$ = actions.addTodo
-        .map(text => ({
-            id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
-            text
-        }))
         .map(todo => todos => todos.set(todo.id, todo));
 
     let removalMod$ = actions.removeTodo
@@ -16,7 +12,7 @@ export default function model(actions) {
         .merge(addMod$, removalMod$)
         .startWith(Immutable.Map())
         .scan((todos, mod) => {
-            console.log('modifying state');
+            console.log('modifying state ', mod(todos));
             return mod(todos);
         });
 

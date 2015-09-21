@@ -30,21 +30,24 @@ let cycleDrivers = {
 function cyclejsMain(drivers) {
 
     // stream from server
-    let wsIncoming$ = drivers.ws;
+    const wsIncoming$ = drivers.ws;
 
     // get own actions
-    let localActions = intent(drivers.DOM);
-    mergedLocalActions$ = mergeActions(localActions);
+    const localActions = intent(drivers.DOM);
+    const mergedLocalActions$ = mergeActions(localActions);
 
     // send own actions to server
     wsOutgoing$ = mergedLocalActions$;
+    //wsOutgoing$ = Cycle.Rx.Observable.never();
 
     // now includes the actions received from the server
-    let allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
+    //let allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
     //let allActionsMerged$ = mergedLocalActions$;
 
     // return to the more convenient format of having separate action-streams
-    let actions = splitActions(Object.keys(localActions), allActionsMerged$);
+    //let actions = splitActions(Object.keys(localActions), allActionsMerged$);
+    const actions = localActions;
+
 
 
     //TODO debug; deletme
@@ -82,13 +85,43 @@ Cycle.run(cyclejsMain, cycleDrivers);
 *       ------ {type: 'B', data: {...}} ---->
 */
 function mergeActions(actions) {
+    const key$ = Cycle.Rx.Observable
+        .fromArray(Object.keys(actions))
+        /*
+        * allow for multiple subscriptions by turning the above into a
+        * hot observable
+        */
+        .publish();
+
+    const merged$ = key$
+        .flatMap(type => {
+            console.log('flatMap type ', type);
+            return actions[type]
+              .map(data => {
+                  return {type, data};
+              })
+          }
+        )
+
+    key$.subscribe(t => console.log('type ', t));
+
+    merged$.subscribe(e => console.log('merged$', e));
+    key$.connect();
+    return merged$;
+}
+function mergeActions2(actions) {
     return Cycle.Rx.Observable
         .fromArray(Object.keys(actions))
         .flatMap(type => actions[type]
             .map(data => {
                 return {type, data};
             })
-        );
+        )
+        /*
+        * allow for multiple subscriptions by turning the above into a
+        * hot observable
+        */
+        .publish()
 }
 
 /*

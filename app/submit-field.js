@@ -27,10 +27,13 @@ export default function submitField(responses) {
                 autofocus=""></input>
         )
 
+    // to prevent the fields 'submit' intruding on our custom submit publishing
+    //responses.DOM.get('.new-todo', 'submit').subscribe(e => e.preventDefault());
+
     return {
       DOM: vtree$,
         events: {
-          submit: submitText$
+          submittodo: submitText$
         }
     };
 }
