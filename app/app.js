@@ -36,16 +36,20 @@ function cyclejsMain(drivers) {
     const localActions = intent(drivers.DOM);
     const mergedLocalActions$ = mergeActions(localActions);
 
+    //TODO causes side-effects
+    localActions.addTodo.subscribe(x => console.log('app.js: addTodo ', x));
+    
     // send own actions to server
-    wsOutgoing$ = mergedLocalActions$;
-    //wsOutgoing$ = Cycle.Rx.Observable.never();
+    //wsOutgoing$ = mergedLocalActions$;
+    wsOutgoing$ = Cycle.Rx.Observable.never();
+    //wsOutgoing$ = localActions.addTodo;
 
     // now includes the actions received from the server
-    //let allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
-    //let allActionsMerged$ = mergedLocalActions$;
+    //const allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
+    //const allActionsMerged$ = mergedLocalActions$;
 
     // return to the more convenient format of having separate action-streams
-    //let actions = splitActions(Object.keys(localActions), allActionsMerged$);
+    //const actions = splitActions(Object.keys(localActions), allActionsMerged$);
     const actions = localActions;
 
 
@@ -85,43 +89,11 @@ Cycle.run(cyclejsMain, cycleDrivers);
 *       ------ {type: 'B', data: {...}} ---->
 */
 function mergeActions(actions) {
-    const key$ = Cycle.Rx.Observable
-        .fromArray(Object.keys(actions))
-        /*
-        * allow for multiple subscriptions by turning the above into a
-        * hot observable
-        */
-        .publish();
-
-    const merged$ = key$
-        .flatMap(type => {
-            console.log('flatMap type ', type);
-            return actions[type]
-              .map(data => {
-                  return {type, data};
-              })
-          }
-        )
-
-    key$.subscribe(t => console.log('type ', t));
-
-    merged$.subscribe(e => console.log('merged$', e));
-    key$.connect();
+    let merged$ = Cycle.Rx.Observable.empty();
+    for (let actionType of Object.keys(actions)) {
+        merged$ = merged$.merge(actions[actionType]);
+    }
     return merged$;
-}
-function mergeActions2(actions) {
-    return Cycle.Rx.Observable
-        .fromArray(Object.keys(actions))
-        .flatMap(type => actions[type]
-            .map(data => {
-                return {type, data};
-            })
-        )
-        /*
-        * allow for multiple subscriptions by turning the above into a
-        * hot observable
-        */
-        .publish()
 }
 
 /*

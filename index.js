@@ -20,7 +20,7 @@ const exprServer = app.listen(8000, () => {
     const host = exprServer.address().address;
     const port = exprServer.address().port;
 
-    console.log('Example app listening at http://%s:%s', host, port);
+    console.log('Listening at http://%s:%s', host, port);
 })
 
 

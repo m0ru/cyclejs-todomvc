@@ -14,6 +14,7 @@ export default function submitField(responses) {
                 return key === 13;
             });
     let submitText$ = submit$.withLatestFrom(text$, (s, t) => t);
+    submitText$.subscribe(t => console.log('submit-field: ', t));
 
     let vtree$ = submit$
         .map(x => '')
