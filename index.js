@@ -21,7 +21,7 @@ const exprServer = app.listen(8000, () => {
     const port = exprServer.address().port;
 
     console.log('Listening at http://%s:%s', host, port);
-})
+});
 
 
 let wsCount = 0;
@@ -32,8 +32,13 @@ function handleWsConnection(thisWs) {
     wsCount++; //TODO quick and dirty. not suited for production use
     thisWs.send('hello! you have opened a websocket-connection to this server.');
 
+    thisWs.on('close', (function(){
+        console.log('closing socket ', this.uid);
+        sockets.delete(this.uid);
+    }).bind(thisWs));
 
-    thisWs.on('message', function(message) {
+
+    thisWs.on('message', (message) => {
         console.log('received: %s', message);
         let action = JSON.parse(message);
         for(let [uid, ws] of sockets) {
