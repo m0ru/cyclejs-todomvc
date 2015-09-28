@@ -10,6 +10,8 @@ import view from './view';
 
 import makeWsDriver from './make-ws-driver';
 
+import { mergeActions, splitActions } from './utils';
+
 //TODO debug; deleteme
 window.Cycle = Cycle;
 /* TODO STOPPED HERE:
@@ -67,36 +69,3 @@ function cyclejsMain(drivers) {
 }
 
 Cycle.run(cyclejsMain, cycleDrivers);
-
-/*
-* In: { A: A$, B: B$}
-*
-* Out: actions$:
-*    |-----{type: 'A', data: {...}} ----
-*       ------ {type: 'B', data: {...}} ---->
-*/
-function mergeActions(actions) {
-    let merged$ = Cycle.Rx.Observable.empty();
-    for (let actionType of Object.keys(actions)) {
-        const typed$ = actions[actionType].map(data => ({type: actionType, data}));
-        merged$ = merged$.merge(typed$);
-    }
-    return merged$;
-}
-
-/*
-* In: actions$:
-*    |-----{type: 'A', data: {...}} ----
-*       ------ {type: 'B', data: {...}} ---->
-*
-* Out: { A: A$, B: B$}
-*/
-function splitActions(types, actions$) {
-    let actions = {};
-    for (let t of types) {
-        actions[t] = actions$
-            .filter(a => a.type === t)
-            .map(a => a.data)
-    }
-    return actions;
-}
