@@ -36,40 +36,27 @@ function cyclejsMain(drivers) {
     const localActions = intent(drivers.DOM);
     const mergedLocalActions$ = mergeActions(localActions);
 
-    //TODO causes side-effects
-    localActions.addTodo.subscribe(x => console.log('app.js: addTodo ', x));
-    
     // send own actions to server
-    //wsOutgoing$ = mergedLocalActions$;
-    wsOutgoing$ = Cycle.Rx.Observable.never();
-    //wsOutgoing$ = localActions.addTodo;
+    wsOutgoing$ = mergedLocalActions$;
 
     // now includes the actions received from the server
-    //const allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
-    //const allActionsMerged$ = mergedLocalActions$;
+    const allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
 
     // return to the more convenient format of having separate action-streams
-    //const actions = splitActions(Object.keys(localActions), allActionsMerged$);
-    const actions = localActions;
-
-
+    const actions = splitActions(Object.keys(localActions), allActionsMerged$);
 
     //TODO debug; deletme
+    /*
+    mergedLocalActions$.subscribe(x => console.log('mergedLocalActions$ ', x));
+    wsOutgoing$.subscribe(x => console.log('wsOutgoing$ ', x));
+    wsIncoming$.subscribe(x => console.log('wsIncoming$ ', x));
+    allActionsMerged$.subscribe(x => console.log('allActionsMerged$ ', x));
+    actions.addTodo.subscribe(x => console.log('merged and split ', x));
     window.actions = actions;
     window.DOM = drivers.DOM;
     window.ws = drivers.ws;
     window.wsIncoming$ = wsIncoming$;
     window.wsOutgoing$ = wsOutgoing$;
-
-/*
-    mergedLocalActions$.subscribe(x => console.log('mergedLocalActions$: ', x));
-    wsIncoming$.subscribe(x => console.log('wsIncoming$: ', x));
-    //TODO subscribing twice causes the websocket onNext to only trigger
-    // for the second observable.
-    //
-    allActionsMerged$ = mergedLocalActions$.merge(wsIncoming$);
-    allActionsMerged$.subscribe(x => console.log('allActionsMerged$1: ', x));
-    allActionsMerged$.subscribe(x => console.log('allActionsMerged$2: ', x));
     */
 
     let state$ = model(actions);
@@ -91,7 +78,8 @@ Cycle.run(cyclejsMain, cycleDrivers);
 function mergeActions(actions) {
     let merged$ = Cycle.Rx.Observable.empty();
     for (let actionType of Object.keys(actions)) {
-        merged$ = merged$.merge(actions[actionType]);
+        const typed$ = actions[actionType].map(data => ({type: actionType, data}));
+        merged$ = merged$.merge(typed$);
     }
     return merged$;
 }

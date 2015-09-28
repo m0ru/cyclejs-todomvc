@@ -11,10 +11,7 @@ export default function model(actions) {
     let todos$ = Cycle.Rx.Observable
         .merge(addMod$, removalMod$)
         .startWith(Immutable.Map())
-        .scan((todos, mod) => {
-            console.log('modifying state ', mod(todos));
-            return mod(todos);
-        });
+        .scan((todos, mod) => mod(todos));
 
     return Cycle.Rx.Observable.combineLatest(
         todos$,
