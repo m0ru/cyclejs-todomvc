@@ -1,9 +1,12 @@
 
+//import System from 'systemjs';
+//import System from './jspm_packages/system';
+import './jspm.config.js';
 import express from 'express';
 import attachExpressWs from 'express-ws'
 
 /*
-import { mergeActions, splitActions } from './app/utils';
+import { mergeActions, splitActions } from '../app/utils';
 import Cycle from '@cycle/core';
 import {makeDOMDriver} from '@cycle/dom';
 import todoItem from './todo-item';

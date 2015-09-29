@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "npm run compile",
-    "compile": "babel index.js > generated/index.js",
+    "compile": "jspm bundle index.js generated/index.js --inject",
     "prestart": "npm run compile",
     "start": "node generated/index.js",
     "watch": "watch 'npm run start' .",
@@ -17,9 +17,7 @@
     "jspm": "^0.16.0-beta.6"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
-    "express": "^4.13.3",
-    "express-ws": "^0.2.6"
+    "babel": "^5.8.23"
   },
   "jspm": {
     "directories": {},
@@ -27,6 +25,8 @@
     "dependencies": {
       "@cycle/core": "npm:@cycle/core@^2.0.1",
       "@cycle/dom": "npm:@cycle/dom@^4.0.1",
+      "express": "npm:express@^4.13.3",
+      "express-ws": "npm:express-ws@^1.0.0-rc.1",
       "immutable": "npm:immutable@^3.7.4",
       "rx": "npm:rx@^3.0.0",
       "rx-dom": "npm:rx-dom@^6.0.0",
