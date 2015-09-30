@@ -25,6 +25,8 @@
     "dependencies": {
       "@cycle/core": "npm:@cycle/core@^2.0.1",
       "@cycle/dom": "npm:@cycle/dom@^4.0.1",
+      "es6-module-loader": "npm:es6-module-loader@^0.17.8",
+      "es6-shim": "github:es-shims/es6-shim@^0.33.6",
       "express": "npm:express@^4.13.3",
       "express-ws": "npm:express-ws@^1.0.0-rc.1",
       "immutable": "npm:immutable@^3.7.4",
@@ -33,9 +35,9 @@
       "ws": "npm:ws@^0.8.0"
     },
     "devDependencies": {
-      "babel": "npm:babel-core@^5.8.21",
-      "babel-runtime": "npm:babel-runtime@^5.8.20",
-      "core-js": "npm:core-js@^1.0.0"
+      "babel": "npm:babel-core@^5.8.25",
+      "babel-runtime": "npm:babel-runtime@^5.8.25",
+      "core-js": "npm:core-js@^1.2.0"
     }
   }
 }

@@ -1,7 +1,10 @@
 
 //import System from 'systemjs';
 //import System from './jspm_packages/system';
-import './jspm.config.js';
+//let System = require('./jspm_packages/system');
+//var System = require('es6-module-loader').System;
+//import { System } from 'es6-module-loader';
+//import './jspm.config.js';
 import express from 'express';
 import attachExpressWs from 'express-ws'
 
